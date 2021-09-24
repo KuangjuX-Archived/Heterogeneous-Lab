@@ -1,2 +1,2 @@
 # Heterogeneous-Lab
-Heterogenous Computing Course Lab in TJU
+Heterogenous Computing Course Lab in TJU.
