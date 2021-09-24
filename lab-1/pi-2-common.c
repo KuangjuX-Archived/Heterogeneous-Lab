@@ -2,8 +2,10 @@
 #include <malloc.h>
 #include <time.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 // long long N;
+const long double TimeConvert = 1e6;
 long double pi;
 
 #define BLOCK_NUM 32   //块数量
@@ -20,15 +22,19 @@ void pi_compute(){
 
 int main(){
     pi = 0;
-    // if (args < 1){
-    //     printf("Expected Arguments");
-    //     return -1;
-    // }
 
-    // N = atoi(argc[1]);
-
-    // Calculate pi
+    struct timeval start_time, end_time;
+    gettimeofday(&start_time, NULL);
     pi_compute();
     pi = pi*4;
-    printf("pi: %.10LF\n",pi);
+
+    gettimeofday(&end_time, NULL);
+    long long int start, end;
+    start = start_time.tv_sec * TimeConvert + start_time.tv_usec;
+    end = end_time.tv_sec * TimeConvert + end_time.tv_usec;
+    long double span_time;
+    span_time = (end - start) / TimeConvert;
+    printf("花费时间: %.6LFs.\n", span_time);
+
+    printf("计算的 pi 值为: %.10LF\n",pi);
 }

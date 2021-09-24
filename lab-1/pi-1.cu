@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include <time.h>
+#include <sys/time.h>
 
+const long double TimeConvert = 1e6;
 #define BLOCK_NUM 32   //块数量
 #define THREAD_NUM 256 // 每个块中的线程数
 #define LOOP_N ((unsigned long long)(BLOCK_NUM * THREAD_NUM * 100000))
@@ -24,6 +27,9 @@ int main() {
     double *h_sum, *g_sum;
     double pi_v = 0;
 
+    struct timeval start_time, end_time;
+    gettimeofday(&start_time, NULL);
+
     // allocate host memory
     h_sum = (double*) malloc(sizeof(double) * BLOCK_NUM * THREAD_NUM);
 
@@ -40,7 +46,15 @@ int main() {
         pi_v += h_sum[i];
     }
 
-    printf("calculate %.10f\n", (pi_v/LOOP_N));
+    gettimeofday(&end_time, NULL);
+    long long int start, end;
+    start = start_time.tv_sec * TimeConvert + start_time.tv_usec;
+    end = end_time.tv_sec * TimeConvert + end_time.tv_usec;
+    long double span_time;
+    span_time = (end - start) / TimeConvert;
+    printf("花费时间: %.6LFs.\n", span_time);
+
+    printf("计算的 pi 值为： %.10f\n", (pi_v/LOOP_N));
 
     cudaFree(g_sum);
     free(h_sum);
